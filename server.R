@@ -30,7 +30,7 @@ shinyServer(function(input, output) {
     z.x <- as.matrix(z.fit$sc.x)
     colnames(z.x) <- NULL
     
-    cvec <- 10^c(-3:2)
+    cvec <- 10^c(seq(-5,-1,length.out=200))
     cn.svm <- fit.svm(cn.x, y, cn.x, cvec)
     z.svm <- fit.svm(z.x, y, z.x, cvec)
     xseq = seq(-30, 30, length.out=10000)
