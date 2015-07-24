@@ -39,9 +39,9 @@ shinyServer(function(input, output) {
     
     # draw the histogram with the specified number of bins
     par(mfrow=c(1,2))
-    plot(z.x[,1], z.x[,2], col=2*y+2, xlab="eruptions", ylab="waiting")
+    plot(z.x[,1], z.x[,2], col=2*y+2, xlab="eruptions", ylab="waiting", main="Z-normalization")
     lines(xseq, z.line)
-    plot(cn.x[,1], cn.x[,2], col=2*y+2, xlab="eruptions", ylab="waiting")
+    plot(cn.x[,1], cn.x[,2], col=2*y+2, xlab="eruptions", ylab="waiting", main="Control-normalization")
     lines(xseq, cn.line)
 
     print(paste("Cost parameter for z-normalization tuned to: ", z.svm$bestC$C))
