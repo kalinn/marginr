@@ -25,7 +25,15 @@ shinyServer(function(input, output) {
     faithful.star[faithful$labels==1,]$eruptions<-faithful[faithful$labels==1,]$eruptions-input$xx/10
     faithful.star[faithful$labels==1,]$waiting<-faithful[faithful$labels==1,]$waiting-input$yy
 
-    samp <- sample(1:nrow(faithful), input$n, replace=FALSE)
+    print(input$n0)
+    print(input$n1)
+    print(faithful$labels/sum(faithful$labels))
+    sum(print(faithful$labels/sum(faithful$labels))>0)
+    sum(print((1-faithful$labels)/sum(1-faithful$labels))>0)
+    #samp <- sample(1:nrow(faithful), input$n, replace=FALSE)
+    samp0 <- sample(1:nrow(faithful), input$n0, prob=faithful$labels/sum(faithful$labels), replace=FALSE)
+    samp1 <- sample(1:nrow(faithful), input$n1, prob=(1-faithful$labels)/sum(1-faithful$labels), replace=FALSE)
+    samp<-c(samp0,samp1)
     # generate bins based on input$bins from ui.R
     y <- faithful$labels[samp]
     x <- as.matrix(faithful.star[samp,1:2])
@@ -51,8 +59,8 @@ shinyServer(function(input, output) {
     plot(cn.x[,1], cn.x[,2], col=2*y+2, xlab="eruptions", ylab="waiting", main="Control-normalization")
     lines(xseq, cn.line)
 
-    cn.t<-as.matrix(cn.x)%*%cn.svm$w
-    z.t<-as.matrix(z.x)%*%z.svm$w
+    cn.t<-cn.norm(as.matrix(faithful.star[,1:2]),faithful.star$labels,as.matrix(faithful.star[,1:2]))$sc.x%*%cn.svm$w
+    z.t<-z.norm(as.matrix(faithful.star[,1:2]),as.matrix(faithful.star[,1:2]))$sc.x%*%z.svm$w
     cn.pred <- prediction(cn.t, faithful.star$labels)
     cn.perf <- performance(cn.pred, measure = "tpr", x.measure = "fpr") 
     z.pred <- prediction(z.t, faithful.star$labels)

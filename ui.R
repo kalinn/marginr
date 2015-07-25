@@ -14,11 +14,16 @@ shinyUI(pageWithSidebar(
   
   # Sidebar with a slider input for number of samples
   sidebarPanel(
-    sliderInput("n",
-                "Number of n:",
+    sliderInput("n0",
+                "Number in group 1:",
                 min = 1,
-                max = 272,
-                value = 100),
+                max = 98,
+                value = 50),
+    sliderInput("n1",
+                "Number in group 2:",
+                min = 1,
+                max = 104,
+                value = 50),
     sliderInput("xx",
                 "eruptions offset:",
                 min = 0,
