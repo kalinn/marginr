@@ -18,7 +18,17 @@ shinyUI(pageWithSidebar(
                 "Number of n:",
                 min = 1,
                 max = 272,
-                value = 100)
+                value = 100),
+    sliderInput("xx",
+                "eruptions offset:",
+                min = 0,
+                max = 20,
+                value = 10),
+    sliderInput("yy",
+                "waiting offset:",
+                min = 0,
+                max = 28,
+                value = 10)
   ),
   
   # Show a plot of the generated distribution
