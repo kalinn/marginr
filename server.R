@@ -51,8 +51,8 @@ shinyServer(function(input, output) {
     plot(cn.x[,1], cn.x[,2], col=2*y+2, xlab="eruptions", ylab="waiting", main="Control-normalization")
     lines(xseq, cn.line)
 
-    cn.t<-as.matrix(faithful.star[,1:2])%*%cn.svm$w
-    z.t<-as.matrix(faithful.star[,1:2])%*%z.svm$w
+    cn.t<-as.matrix(cn.x)%*%cn.svm$w
+    z.t<-as.matrix(z.x)%*%z.svm$w
     cn.pred <- prediction(cn.t, faithful.star$labels)
     cn.perf <- performance(cn.pred, measure = "tpr", x.measure = "fpr") 
     z.pred <- prediction(z.t, faithful.star$labels)
