@@ -45,7 +45,7 @@ shinyServer(function(input, output) {
     z.line = -z.svm$rho/z.svm$w[2] - z.svm$w[1]*xseq/z.svm$w[2]
     
     # draw the histogram with the specified number of bins
-    par(mfrow=c(2,2))
+    par(mfrow=c(2,2),mar=c(2,2,2,2))
     plot(z.x[,1], z.x[,2], col=2*y+2, xlab="eruptions", ylab="waiting", main="Z-normalization")
     lines(xseq, z.line)
     plot(cn.x[,1], cn.x[,2], col=2*y+2, xlab="eruptions", ylab="waiting", main="Control-normalization")
@@ -57,9 +57,9 @@ shinyServer(function(input, output) {
     cn.perf <- performance(cn.pred, measure = "tpr", x.measure = "fpr") 
     z.pred <- prediction(z.t, faithful.star$labels)
     z.perf <- performance(z.pred, measure = "tpr", x.measure = "fpr") 
-    plot(z.perf, col='green')
+    plot(z.perf, col='red',lwd=3)
     text(0.5,0.5,round(unlist(performance(z.pred, measure = "auc")@y.values),2))
-    plot(cn.perf, col='red')
+    plot(cn.perf, col='green',lwd=3)
     text(0.5,0.5,round(unlist(performance(cn.pred, measure = "auc")@y.values),2))
     
     print(paste("Cost parameter for z-normalization tuned to: ", z.svm$bestC$C))
