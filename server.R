@@ -36,7 +36,7 @@ shinyServer(function(input, output) {
       #    y <- faithful$labels[samp]
       #    x <- as.matrix(faithful.star[samp,1:2])
     
-      gen.seed = floor(10000*rnorm(1))
+      gen.seed = abs(floor(10000*rnorm(1)))
       set.seed(gen.seed)
       print(paste("Seed is: ", gen.seed))
       
@@ -102,6 +102,8 @@ shinyServer(function(input, output) {
       plot(z.perf, col='red', lwd=3)
       lines(performance(cn.pred, measure = "tpr", x.measure = "fpr")@x.values[[1]],
             performance(cn.pred, measure = "tpr", x.measure = "fpr")@y.values[[1]], col='green', lwd=3)
+      plot(0, 0)
+      text(0, 0.5, print(paste("Seed = ", gen.seed)), cex=3)
      
       print(paste("Cost parameter for z-normalization tuned to: ", z.svm$bestC$C))
       print(paste("Cost parameter for control-normalization tuned to: ", cn.svm$bestC$C))
