@@ -64,12 +64,22 @@ shinyServer(function(input, output) {
       n2 = input$n2
       cloud1 = mvrnorm(n1, m1, sig1)
       cloud2 = mvrnorm(n2, m2, sig2)
+
+      transfm<-function(x,ma) log(x-min(x)+0.01)+ma
+      cloud1[1,]<-transfm(cloud1[1,],m1)
+      cloud2[1,]<-transfm(cloud2[1,],m2)
+
       x = rbind(cloud1, cloud2)
       y = c(rep(0, n1), rep(1, n2))
       ts.cloud1 = mvrnorm(ts.n, m1, sig1)
       ts.cloud2 = mvrnorm(ts.n, m2, sig2)
+
+      ts.cloud1[1,]<-transfm(ts.cloud1[1,],m1)
+      ts.cloud2[1,]<-transfm(ts.cloud2[1,],m2)
+
       ts.x = rbind(ts.cloud1, ts.cloud2)
       ts.y = c(rep(0, ts.n), rep(1, ts.n))
+
       
       colnames(x) <- NULL
       colnames(ts.x) <- NULL
