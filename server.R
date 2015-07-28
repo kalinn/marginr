@@ -115,10 +115,16 @@ shinyServer(function(input, output) {
       cn.perf <- performance(cn.pred, measure = "tpr", x.measure = "fpr") 
       z.pred <- prediction(z.t, ts.y)
       z.perf <- performance(z.pred, measure = "tpr", x.measure = "fpr") 
+     
       plot(z.perf, col='red',lwd=3)
-      text(0.5,0.5,round(unlist(performance(z.pred, measure = "auc")@y.values),2), cex=3)
+      text(0.5,0.75,round(unlist(performance(z.pred, measure = "auc")@y.values),2), cex=3)
+      text(0.5,0.5,round(unlist(performance(z.pred, measure = "auc", fpr.stop=.25)@y.values),2), cex=3)
+      text(0.5,0.25,round(unlist(performance(z.pred, measure = "auc", fpr.stop=.5)@y.values),2), cex=3)
       plot(cn.perf, col='green',lwd=3)
-      text(0.5,0.5,round(unlist(performance(cn.pred, measure = "auc")@y.values),2), cex=3)
+      text(0.5,0.75,round(unlist(performance(cn.pred, measure = "auc")@y.values),2), cex=3)
+      text(0.5,0.5,round(unlist(performance(cn.pred, measure = "auc", fpr.stop=.25)@y.values),2), cex=3)
+      text(0.5,0.25,round(unlist(performance(cn.pred, measure = "auc", fpr.stop=.5)@y.values),2), cex=3)
+     
       plot(z.perf, col='red', lwd=3)
       lines(performance(cn.pred, measure = "tpr", x.measure = "fpr")@x.values[[1]],
             performance(cn.pred, measure = "tpr", x.measure = "fpr")@y.values[[1]], col='green', lwd=3)
