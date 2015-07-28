@@ -4,7 +4,7 @@
 # 
 # http://www.rstudio.com/shiny/
 #
-
+ts.n<-1E3
 library(shiny)
 library(rPython)
 library(ROCR)
@@ -44,8 +44,8 @@ shinyServer(function(input, output) {
       m2 = c(input$meanX1n2, input$meanX2n2)
       v1 = c(input$varX1n1, input$varX2n1)
       v2 = c(input$varX1n2, input$varX2n2)
-      c1 = input$corn1*sqrt(v1[1])*sqrt(v1[2])
-      c2 = input$corn2*sqrt(v2[1])*sqrt(v2[2])
+      c1 = input$corn1/10*sqrt(v1[1])*sqrt(v1[2])
+      c2 = input$corn2/10*sqrt(v2[1])*sqrt(v2[2])
       sig1 = matrix(rep(c1, 4), 2, 2)
       diag(sig1) = v1
       sig2 = matrix(rep(c2, 4), 2, 2)
@@ -56,10 +56,10 @@ shinyServer(function(input, output) {
       cloud2 = mvrnorm(n2, m2, sig2)
       x = rbind(cloud1, cloud2)
       y = c(rep(0, n1), rep(1, n2))
-      ts.cloud1 = mvrnorm(n1, m1, sig1)
-      ts.cloud2 = mvrnorm(n2, m2, sig2)
+      ts.cloud1 = mvrnorm(ts.n, m1, sig1)
+      ts.cloud2 = mvrnorm(ts.n, m2, sig2)
       ts.x = rbind(ts.cloud1, ts.cloud2)
-      ts.y = c(rep(0, n1), rep(1, n2))
+      ts.y = c(rep(0, ts.n), rep(1, ts.n))
       
       colnames(x) <- NULL
       colnames(ts.x) <- NULL
@@ -83,17 +83,27 @@ shinyServer(function(input, output) {
       z.line = -z.svm$rho/z.svm$w[2] - z.svm$w[1]*xseq/z.svm$w[2]
       
      # draw the histogram with the specified number of bins
-      par(mfrow=c(3,2),mar=c(2,2,2,2))
-      plot(z.ts[,1], z.ts[,2], col=2*y+2, xlab="X1", ylab="X2", main="Z-normalization", cex.main=2)
+      par(mfrow=c(4,2),mar=c(2,2,2,2))
+      
+      plot(z.x[,1], z.x[,2], col=2*y+2, xlab="X1", ylab="X2", main="Z-normalization", cex.main=2)
       lines(xseq, z.line)
-      plot(cn.ts[,1], cn.ts[,2], col=2*y+2, xlab="X1", ylab="X2", main="Control-normalization", cex.main=2)
+      abline(a=-z.svm$rho/z.svm$w[2],b=- z.svm$w[1]/z.svm$w[2])
+      plot(cn.x[,1], cn.x[,2], col=2*y+2, xlab="X1", ylab="X2", main="Control-normalization", cex.main=2)
       lines(xseq, cn.line)
-
+      abline(a=-cn.svm$rho/cn.svm$w[2],b=- cn.svm$w[1]/cn.svm$w[2])
+      
+      plot(z.ts[,1], z.ts[,2], col=2*ts.y+2, xlab="X1", ylab="X2", main="Z-normalization", cex.main=2)
+      lines(xseq, z.line)
+      abline(a=-z.svm$rho/z.svm$w[2],b=- z.svm$w[1]/z.svm$w[2])
+      plot(cn.ts[,1], cn.ts[,2], col=2*ts.y+2, xlab="X1", ylab="X2", main="Control-normalization", cex.main=2)
+      lines(xseq, cn.line)
+      abline(a=-cn.svm$rho/cn.svm$w[2],b=- cn.svm$w[1]/cn.svm$w[2])
+      
       cn.t<-cn.ts%*%cn.svm$w
       z.t<-z.ts%*%z.svm$w
-      cn.pred <- prediction(cn.t, y)
+      cn.pred <- prediction(cn.t, ts.y)
       cn.perf <- performance(cn.pred, measure = "tpr", x.measure = "fpr") 
-      z.pred <- prediction(z.t, y)
+      z.pred <- prediction(z.t, ts.y)
       z.perf <- performance(z.pred, measure = "tpr", x.measure = "fpr") 
       plot(z.perf, col='red',lwd=3)
       text(0.5,0.5,round(unlist(performance(z.pred, measure = "auc")@y.values),2), cex=3)
