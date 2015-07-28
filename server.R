@@ -13,6 +13,16 @@ dir = system("pwd", intern=TRUE)
 python.load(paste0(dir,"/fit_svm.py"))
 source(paste0(dir,"/normalize_fns.R"))
 
+pROC = function(pred, fpr.stop){
+  perf <- performance(pred,"tpr","fpr")
+  for (iperf in seq_along(perf@x.values)){
+    ind = which(perf@x.values[[iperf]] <= fpr.stop)
+    perf@y.values[[iperf]] = perf@y.values[[iperf]][ind]
+    perf@x.values[[iperf]] = perf@x.values[[iperf]][ind]
+  }
+  return(perf)
+}
+
 shinyServer(function(input, output) {
       
   output$distPlot <- renderPlot({
