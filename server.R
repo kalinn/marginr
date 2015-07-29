@@ -50,32 +50,36 @@ shinyServer(function(input, output) {
       set.seed(gen.seed)
       print(paste("Seed is: ", gen.seed))
       
-      m1 = c(input$meanX1n1, input$meanX2n1)
-      m2 = c(input$meanX1n2, input$meanX2n2)
+      m1 = c(input$meanX1n1, input$meanX2n1, rep(0, input$p))
+      m2 = c(input$meanX1n2, input$meanX2n2, rep(0, input$p))
       v1 = c(input$varX1n1, input$varX2n1)
       v2 = c(input$varX1n2, input$varX2n2)
       c1 = input$corn1/10*sqrt(v1[1])*sqrt(v1[2])
       c2 = input$corn2/10*sqrt(v2[1])*sqrt(v2[2])
-      sig1 = matrix(rep(c1, 4), 2, 2)
-      diag(sig1) = v1
-      sig2 = matrix(rep(c2, 4), 2, 2)
-      diag(sig2) = v2    
+      sig1 = matrix(rep(0, (input$p+2)^2), input$p+2, input$p+2)
+      diag(sig1) = c(v1, rep(1, input$p))
+      sig1[1,2] = c1
+      sig1[2,1] = c1
+      sig2 = matrix(rep(0, (input$p+2)^2), input$p+2, input$p+2)
+      diag(sig2) = c(v2, rep(1, input$p))   
+      sig2[1,2] = c2
+      sig2[2,1] = c2
       n1 = input$n1
       n2 = input$n2
       cloud1 = mvrnorm(n1, m1, sig1)
       cloud2 = mvrnorm(n2, m2, sig2)
 
-      transfm<-function(x,ma) log(x-min(x)+0.01)+ma
-      cloud1[1,]<-transfm(cloud1[1,],m1)
-      cloud2[1,]<-transfm(cloud2[1,],m2)
+#      transfm<-function(x,ma) log(x-min(x)+0.01)+ma
+#      cloud1[1,]<-transfm(cloud1[1,],m1)
+#      cloud2[1,]<-transfm(cloud2[1,],m2)
 
       x = rbind(cloud1, cloud2)
       y = c(rep(0, n1), rep(1, n2))
       ts.cloud1 = mvrnorm(ts.n, m1, sig1)
       ts.cloud2 = mvrnorm(ts.n, m2, sig2)
 
-      ts.cloud1[1,]<-transfm(ts.cloud1[1,],m1)
-      ts.cloud2[1,]<-transfm(ts.cloud2[1,],m2)
+#      ts.cloud1[1,]<-transfm(ts.cloud1[1,],m1)
+#      ts.cloud2[1,]<-transfm(ts.cloud2[1,],m2)
 
       ts.x = rbind(ts.cloud1, ts.cloud2)
       ts.y = c(rep(0, ts.n), rep(1, ts.n))
