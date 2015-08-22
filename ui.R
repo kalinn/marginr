@@ -52,9 +52,10 @@ shinyUI(pageWithSidebar(
                 value = 1),
     sliderInput("corn1",
                 "Correlation, group 1:",
-                min = -10,
-                max = 10,
-                value = 0),
+                min = -1,
+                max = 1,
+                value = 0,
+                step = 0.1),
     sliderInput("meanX1n2",
                 "Mean X1, group 2:",
                 min = -10,
@@ -77,9 +78,10 @@ shinyUI(pageWithSidebar(
                 value = 2),
     sliderInput("corn2",
                 "Correlation, group 2:",
-                min = -10,
-                max = 10,
-                value = 0)
+                min = -1,
+                max = 1,
+                value = 0,
+                step = 0.1)
   ),
 #  sidebarPanel(
 #    sliderInput("n0",
