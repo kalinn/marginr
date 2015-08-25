@@ -7,4 +7,5 @@ To run this app:
 3. Install the “shiny” package if you don’t already have it, and run the following code in R:
 
 	library(shiny)
+	
 	runApp("marginr-master”)
